@@ -46,3 +46,27 @@ HAVING COUNT(1) >= 2
 ORDER BY 
 	rata_rata_transaksi DESC
 limit 10;
+
+
+
+-- Kategori Produk Terlaris dengan total quantity terbanyak di 2020,
+-- hanya untuk transaksi yang sudah terkirim ke pembeli
+
+SELECT 
+	p.category,
+	SUM(o.quantity) total_quantity,
+    SUM(o.price) total_price
+FROM orders od
+INNER JOIN 
+	order_details o USING(order_id)
+INNER JOIN 
+	products p USING(product_id)
+WHERE 
+	od.delivery_at IS NOT NULL 
+	AND 
+	od.delivery_at >= '2020-01-01'
+GROUP BY 
+	p.category
+ORDER BY 
+	total_quantity DESC
+LIMIT 5;
