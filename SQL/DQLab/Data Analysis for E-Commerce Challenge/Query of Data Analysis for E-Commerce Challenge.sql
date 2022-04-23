@@ -19,7 +19,7 @@ limit 10;
 -- Transaksi per bulan tahun 2020
 
 SELECT 
-	extract(YEAR_MONTH FROM created_at) as tahun_bulan,
+  EXTRACT(YEAR_MONTH FROM created_at) as tahun_bulan,
   COUNT(1) jumlah_transaksi, 
   SUM(total) total_transaksi
 FROM 
@@ -35,7 +35,7 @@ ORDER BY
   -- Pengguna dengan rata-rata transaksi terbesar di Januari 2020
 
 SELECT
-	buyer_id,
+    buyer_id,
     count(1) jumlah_transaksi,
     AVG(total) rata_rata_transaksi
 FROM orders
