@@ -70,3 +70,22 @@ GROUP BY
 ORDER BY 
 	total_quantity DESC
 LIMIT 5;
+
+
+
+-- mencari pembeli yang sudah bertransaksi lebih dari 5 kali, dan setiap transaksi lebih dari 2,000,000.
+
+SELECT
+	u.nama_user,
+    COUNT(o.order_id) jumlah_transaksi,
+    SUM(o.total) total_transaksi,
+    MIN(o.total) min_transaksi
+FROM
+	users u
+INNER JOIN
+	orders o ON o.buyer_id = u.user_id
+GROUP BY
+	u.nama_user
+HAVING
+	jumlah_transaksi > 5 AND min_transaksi > 2000000
+ORDER BY 3 DESC;
