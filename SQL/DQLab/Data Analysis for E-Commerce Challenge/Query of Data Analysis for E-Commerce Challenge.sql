@@ -1,4 +1,4 @@
--- 10 Transaksi terbesar user 12476
+-- 10 biggest transactions user 12476
 
 SELECT
   seller_id,
@@ -16,7 +16,7 @@ ORDER BY
 limit 10;
 
 
--- Transaksi per bulan tahun 2020
+-- Transactions per month in 2020
 
 SELECT 
   EXTRACT(YEAR_MONTH FROM created_at) as tahun_bulan,
@@ -32,7 +32,8 @@ ORDER BY
 	tahun_bulan;
   
   
-  -- Pengguna dengan rata-rata transaksi terbesar di Januari 2020
+  
+-- User with biggest transaction average in January 2020
 
 SELECT
     buyer_id,
@@ -49,8 +50,8 @@ limit 10;
 
 
 
--- Kategori Produk Terlaris dengan total quantity terbanyak di 2020,
--- hanya untuk transaksi yang sudah terkirim ke pembeli
+-- The Best Selling Product Category with the highest total quantity in 2020,
+-- only for transactions that have been sent to the buyer
 
 SELECT 
 	p.category,
@@ -73,7 +74,7 @@ LIMIT 5;
 
 
 
--- mencari pembeli yang sudah bertransaksi lebih dari 5 kali, dan setiap transaksi lebih dari 2,000,000.
+-- looking for buyers who have transacted more than 5 times, and each transaction is more than 2,000,000.
 
 SELECT
 	u.nama_user,
@@ -93,7 +94,7 @@ ORDER BY 3 DESC;
 
 
 -- Dropshipper
--- mencari pembeli dengan 10 kali transaksi atau lebih yang alamat pengiriman transaksi selalu berbeda setiap transaksi.
+-- looking for buyers with 10 transactions or more whose transaction delivery addresses are always different for each transaction.
 
 SELECT
 	nama_user,
@@ -109,8 +110,8 @@ ORDER BY buyer_id;
 
 
 -- reseller offline
--- pembeli yang punya 8 atau lebih transaksi yang alamat pengiriman transaksi sama dengan alamat pengiriman utama,
--- dan rata-rata total quantity per transaksi lebih dari 10.
+-- buyers who have 8 or more transactions whose transaction shipping address is the same as the main shipping address,
+-- and the average total quantity per transaction is more than 10.
 
 SELECT
 	nama_user,
@@ -134,8 +135,8 @@ ORDER BY 3 DESC;
 
 
 
--- Pembeli sekaligus penjual
--- mencari penjual yang juga pernah bertransaksi sebagai pembeli minimal 7 kali.
+-- Buyer and as a seller
+-- looking for a seller who has also transacted as a buyer at least 7 times.
 
 SELECT
 	nama_user,
@@ -157,4 +158,21 @@ INNER JOIN
     GROUP BY seller_id) s
 ON u.user_id = s.seller_id
 WHERE jumlah_transaksi_beli >= 7
+ORDER BY 1;
+
+
+
+-- Payment transaction duration
+-- calculates the average length of time from transaction made to paid, grouped by month.
+
+SELECT
+	EXTRACT(YEAR_MONTH FROM created_at) tahun_bulan,
+    COUNT(1) jumlah_transaksi,
+    AVG(DATEDIFF(paid_at,created_at)) avg_lama_bayar,
+    MIN(DATEDIFF(paid_at,created_at)) min_lama_bayar,
+    MAX(DATEDIFF(paid_at,created_at)) max_lama_bayar
+FROM
+	orders
+WHERE paid_at IS NOT NULL
+GROUP BY tahun_bulan
 ORDER BY 1;
