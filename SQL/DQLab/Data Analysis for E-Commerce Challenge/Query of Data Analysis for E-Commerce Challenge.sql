@@ -105,3 +105,29 @@ INNER JOIN users u ON o.buyer_id = u.user_id
 GROUP BY user_id, nama_user
 HAVING jumlah_alamat >= 10
 ORDER BY buyer_id;
+
+
+
+-- reseller offline
+-- pembeli yang punya 8 atau lebih transaksi yang alamat pengiriman transaksi sama dengan alamat pengiriman utama,
+-- dan rata-rata total quantity per transaksi lebih dari 10.
+
+SELECT
+	nama_user,
+    COUNT(1) jumlah_transaksi,
+    SUM(total) AS total_nilai_transaksi,
+	AVG(total) AS avg_nilai_transaksi,
+	AVG(total_quantity) rata_rata_total_quantity
+FROM users u
+INNER JOIN orders o ON buyer_id = user_id
+INNER JOIN 
+	(SELECT
+		order_id,
+		SUM(quantity) total_quantity
+	FROM order_details
+	GROUP BY order_id) x
+USING(order_id)
+WHERE o.kodepos = u.kodepos
+GROUP BY 1, user_id
+HAVING rata_rata_total_quantity > 10 AND jumlah_transaksi >=8
+ORDER BY 3 DESC;
