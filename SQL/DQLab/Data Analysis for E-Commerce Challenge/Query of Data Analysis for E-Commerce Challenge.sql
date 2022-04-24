@@ -89,3 +89,19 @@ GROUP BY
 HAVING
 	jumlah_transaksi > 5 AND min_transaksi > 2000000
 ORDER BY 3 DESC;
+
+
+
+-- Dropshipper
+-- mencari pembeli dengan 10 kali transaksi atau lebih yang alamat pengiriman transaksi selalu berbeda setiap transaksi.
+
+SELECT
+	nama_user,
+    COUNT(DISTINCT o.kodepos) jumlah_alamat,
+    SUM(o.total) total_nilai_transaksi,
+    AVG(o.total) avg_nilai_transaksi
+FROM orders o
+INNER JOIN users u ON o.buyer_id = u.user_id
+GROUP BY user_id, nama_user
+HAVING jumlah_alamat >= 10
+ORDER BY buyer_id;
