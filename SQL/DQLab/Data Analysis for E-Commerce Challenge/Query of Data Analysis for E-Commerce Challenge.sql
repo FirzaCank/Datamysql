@@ -131,3 +131,30 @@ WHERE o.kodepos = u.kodepos
 GROUP BY 1, user_id
 HAVING rata_rata_total_quantity > 10 AND jumlah_transaksi >=8
 ORDER BY 3 DESC;
+
+
+
+-- Pembeli sekaligus penjual
+-- mencari penjual yang juga pernah bertransaksi sebagai pembeli minimal 7 kali.
+
+SELECT
+	nama_user,
+    jumlah_transaksi_beli,
+    jumlah_transaksi_jual
+FROM users u
+INNER JOIN
+	(SELECT
+		buyer_id,
+		COUNT(1) jumlah_transaksi_beli
+	FROM orders o
+	GROUP BY buyer_id) b
+ON b.buyer_id = u.user_id
+INNER JOIN
+	(SELECT
+		seller_id,
+		COUNT(1) jumlah_transaksi_jual
+	FROM orders
+    GROUP BY seller_id) s
+ON u.user_id = s.seller_id
+WHERE jumlah_transaksi_beli >= 7
+ORDER BY 1;
