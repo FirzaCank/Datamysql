@@ -166,13 +166,86 @@ ORDER BY 1;
 -- calculates the average length of time from transaction made to paid, grouped by month.
 
 SELECT
-	EXTRACT(YEAR_MONTH FROM created_at) tahun_bulan,
+    EXTRACT(YEAR_MONTH FROM created_at) tahun_bulan,
     COUNT(1) jumlah_transaksi,
     AVG(DATEDIFF(paid_at,created_at)) avg_lama_bayar,
     MIN(DATEDIFF(paid_at,created_at)) min_lama_bayar,
     MAX(DATEDIFF(paid_at,created_at)) max_lama_bayar
 FROM
-	orders
+    orders
 WHERE paid_at IS NOT NULL
 GROUP BY tahun_bulan
 ORDER BY 1;
+
+
+
+-- Show the most sold products in terms of quantity.
+
+SELECT *
+FROM
+	(SELECT
+		kode_produk,
+		nama_produk,
+		SUM(qty) total
+	FROM ms_produk
+	LEFT JOIN tr_penjualan_detail USING(kode_produk)
+	GROUP BY kode_produk) a
+HAVING total=
+	(SELECT
+		MAX(total)
+	FROM
+		(SELECT
+			SUM(qty) total
+		FROM
+			tr_penjualan_detail
+		GROUP BY kode_produk) b);
+
+
+
+-- The Customer with the Highest Shopping Value
+
+SELECT
+    m.nama_pelanggan,
+    t.kode_pelanggan,
+    SUM(d.qty*d.harga_satuan) total
+FROM
+    ms_pelanggan m
+RIGHT JOIN 
+	tr_penjualan t USING(kode_pelanggan)
+INNER JOIN 
+	tr_penjualan_detail d ON t.kode_transaksi = d.kode_transaksi
+GROUP BY 
+	nama_pelanggan, kode_pelanggan
+ORDER BY 
+	total DESC;
+
+
+
+-- Customers Who Have Never Transaction
+
+SELECT
+	kode_pelanggan,
+    nama_pelanggan,
+    alamat
+FROM
+	ms_pelanggan
+WHERE kode_pelanggan NOT IN
+	(SELECT
+		kode_pelanggan
+	FROM tr_penjualan);
+
+
+
+-- Show transactions that have more than 1 product item number.
+
+SELECT
+	td.kode_transaksi,
+    td.kode_produk,
+    kode_pelanggan,
+    nama_pelanggan,
+    COUNT(td.qty) jumlah_detail
+FROM ms_pelanggan p
+INNER JOIN tr_penjualan t USING(kode_pelanggan)
+INNER JOIN tr_penjualan_detail td USING(kode_transaksi)
+GROUP BY kode_transaksi, kode_pelanggan, nama_pelanggan
+HAVING jumlah_detail > 1;
