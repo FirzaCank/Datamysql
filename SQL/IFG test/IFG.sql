@@ -1,8 +1,7 @@
 CREATE TABLE buggy (
     id INT,
-    name VARCHAR(10) CHARACTER SET utf8,
-    bug INT CHARACTER SET utf8,
-);
+    name VARCHAR(10),
+    bug INT);
 
 INSERT INTO buggy
 VALUES
