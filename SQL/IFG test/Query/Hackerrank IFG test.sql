@@ -45,7 +45,7 @@ LEFT JOIN invoice_item as ii ON p.id = ii.product_id
 WHERE ii.id IS NULL;
 
 
-5. Fetch how many failure & success did each person (name) have? SQL Question
+/*5. Fetch how many failure & success did each person (name) have? SQL Question*/
 
 SELECT
   name,
