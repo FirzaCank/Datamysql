@@ -43,3 +43,30 @@ SELECT
 FROM product p
 LEFT JOIN invoice_item as ii ON p.id = ii.product_id
 WHERE ii.id IS NULL;
+
+
+5. Fetch how many failure & success did each person (name) have? SQL Question
+
+SELECT
+  name,
+  SUM(IF(bug = 0,1,0)) AS failure,
+  SUM(IF(bug = 1,1,0)) AS success
+FROM buggy
+GROUP BY name;
+
+      ATAU
+      
+SELECT
+  t.name, SUM(t.failure) failure, SUM(t.success) success
+FROM
+  (SELECT
+    name,
+    CASE
+      WHEN bug = 0 THEN COUNT(bug) ELSE 0
+    END AS failure,
+    CASE
+      WHEN bug = 1 THEN COUNT(bug) ELSE 0
+    END AS success,
+  FROM buggy
+  GROUP BY name, bug)t
+GROUP BY t.name;
