@@ -33,10 +33,17 @@ and
 
 /*
 WITH EXPLANATION:
-^			      // start of string
-[aeiou]			// a single vowel
-.			      // any characted...
-*			      // ...repeated any number of times
-[aeiou]			// another vowel
-$			      // end of string
+^  			    // string's beginning
+[aeiou]   		// a SINGLE vowel
+$  			    // end of string
+
+Therefore this would match the vowels and only the vowels. Even a string like "aaa" would not match, because it's more than 1 char long.
+The correct one is the one you used at the beginning because of the ".*" bit:
+
+^		        // start of string
+[aeiou]         // a single vowel
+.	            // any characted...
+*		        // ...repeated any number of times
+[aeiou]		    // another vowel
+$	            // end of string
 */
