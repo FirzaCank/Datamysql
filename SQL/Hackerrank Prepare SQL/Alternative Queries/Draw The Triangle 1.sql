@@ -26,6 +26,7 @@ SELECT
 FROM information_schema.tables;
 
 
+
 3. OPTION 3 (MS SQL SERVER) :
 
 DECLARE @i INT = 20
