@@ -45,6 +45,19 @@ LEFT JOIN invoice_item as ii ON p.id = ii.product_id
 WHERE ii.id IS NULL;
 
 
+/*4. cONTOH no 4 (ga sesuai soal asli) using + operator for string.*/
+
+SELECT
+   'customer' AS category, CONCAT(COUNT(hacker_id),' x') as product
+FROM challenge;
+
+OUTPUT :
+
+category product
+-------- -------
+customer   20 x
+
+
 /*5. Fetch how many failure & success did each person (name) have? SQL Question*/
 
 SELECT
