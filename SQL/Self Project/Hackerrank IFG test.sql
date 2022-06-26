@@ -31,7 +31,8 @@ ORDER BY l.ID, h.salary DESC;
 SELECT
   distinct(a.name) low_sal,
   b.name high_sal
-FROM emp a join emp b on a.salary < b.salary;
+FROM emp a join emp b on a.salary < b.salary
+ORDER BY a.ID, b.salary DESC;
 
 
 
