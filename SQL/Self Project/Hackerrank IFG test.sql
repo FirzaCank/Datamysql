@@ -9,6 +9,14 @@ WHERE score > (SELECT
 ORDER BY id;
 
 
+
+
+
+
+
+
+
+
 /*2. Left side is less than right side salary*/
 
 SELECT
@@ -24,6 +32,14 @@ SELECT
   distinct(a.name) low_sal,
   b.name high_sal
 FROM emp a join emp b on a.salary < b.salary;
+
+
+
+
+
+
+
+
 
 
 /*3. List Customer And Product Without Sale
@@ -46,17 +62,86 @@ LEFT JOIN invoice_item as ii ON p.id = ii.product_id
 WHERE ii.id IS NULL;
 
 
-/*4. cONTOH no 4 (ga sesuai soal asli) using + operator for string.*/
+
+
+
+
+
+
+
+
+/*4. cONTOH no 4 - GROUP CONCAT.*/
+
+OPSI 1 :
 
 SELECT
-   'customer' AS category, CONCAT(COUNT(hacker_id),' x') as product
-FROM challenge;
+    country,
+    group_concat(votes,'') as votes
+FROM
+(
+   SELECT
+      country,
+      CONCAT(v.first_name,' ',v.last_name,' x ',COUNT(r.voter_id)) AS votes
+   FROM voter v
+   RIGHT JOIN result r ON v.id = r.voter_id
+   GROUP BY country,first_name,last_name
+) x
+GROUP BY country;
 
-OUTPUT :
 
-category product
--------- -------
-customer   20 x
+output opsi 1:
+
+country	votes
+------  -----
+California	charlie puth x 2,michael jackson x 1
+Mexico	michael jackson x 2,nicky minaj x 1
+Nevada	charlie puth x 1
+Texas	charlie puth x 1,nicky minaj x 1
+Washington	nicky minaj x 1
+
+
+Dengan output breakdown subquery x :
+
+country	votes
+------- -----
+California	charlie puth x 2
+Texas	charlie puth x 1
+Mexico	michael jackson x 2
+Nevada	charlie puth x 1
+Washington	nicky minaj x 1
+California	michael jackson x 1
+Mexico	nicky minaj x 1
+Texas	nicky minaj x 1
+
+
+OPSI 2 :
+
+select country, group_concat(concat(first_name, ' ', last_name, ' x ', c) order by c desc)
+from (  
+  select country, voter_id, count(*) c 
+  from result
+  group by country, voter_id
+) x
+join voter on id = voter_id
+group by country;
+
+
+Dengan output breakdown subquery x :
+
+country	voter_id	c
+------- --------  -
+California	1	2
+Texas	1	1
+Mexico	2	2
+Nevada	1	1
+Washington	3	1
+California	2	1
+Mexico	3	1
+Texas	3	1
+
+
+
+
 
 
 /*5. Fetch how many failure & success did each person (name) have? SQL Question*/
