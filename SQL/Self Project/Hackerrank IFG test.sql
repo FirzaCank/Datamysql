@@ -15,7 +15,8 @@ SELECT
   l.name less,
   h.name greater
 FROM emp l, emp h
-WHERE l.id != h.id AND l.salary < h.salary;
+WHERE l.id != h.id AND l.salary < h.salary
+ORDER BY l.ID, h.salary DESC;
 
                 ATAU
 
